@@ -1,0 +1,107 @@
+openapi: "3.0.2"
+info:
+  title: API Title
+  version: "1.0"
+servers:
+  - url: https://api.server.test/v1
+
+components:
+  securitySchemes:
+    bearerAuth:
+      description: "#### Example: Bearer [TOKEN]"
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    successResponse:
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: string
+                example: success
+
+    unprocessableEntityResponse:
+      description: Validation Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: error
+              message:
+                type: string
+                example: idToken is not allowed to be empty
+
+paths:
+  /v1/users/register:
+    post:
+      summary: Register user
+      description: ""
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: John Snow
+                email:
+                  type: string
+                  example: john@mailinator.com
+                password:
+                  type: string
+                  example: password
+      responses:
+        "200":
+          $ref: "#/components/responses/successResponse"
+        "422":
+          $ref: "#/components/responses/unprocessableEntityResponse"
+
+  /v1/users/login:
+    post:
+      summary: Login user
+      description: ""
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: john@mailinator.com
+                password:
+                  type: string
+                  example: password
+      responses:
+        "200":
+          $ref: "#/components/responses/successResponse"
+        "422":
+          $ref: "#/components/responses/unprocessableEntityResponse"
+
+  /v1/users:
+    get:
+      summary: Login user details
+      description: ""
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          $ref: "#/components/responses/successResponse"
+        "422":
+          $ref: "#/components/responses/unprocessableEntityResponse"
